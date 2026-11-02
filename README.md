@@ -4,7 +4,7 @@
 
 Please contact tech_support@nihaopay.com for assistance. The plugin supports the latest version of WooCommerce unless otherwise noted. 
 
-- minimum PHP version:
+- Supported WooCommerce version: latest
 - Tested WooCommerce minimum version: 6.0.0 
 - Tested WooCommerce version up to: 10.1.2
 
