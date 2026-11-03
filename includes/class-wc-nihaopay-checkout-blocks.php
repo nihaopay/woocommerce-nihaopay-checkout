@@ -21,50 +21,67 @@ final class WC_Nihaopay_Checkout_Blocks_Support extends AbstractPaymentMethodTyp
    *
    * @var string
    */
-  protected $name = 'nihaopay';
+  protected $name = "nihaopay";
 
-  public function initialize()
+  public function initialize(): void
   {
     $this->settings = get_option("woocommerce_nihaopay_settings", []);
     $gateways = WC()->payment_gateways->payment_gateways();
     $this->gateway = $gateways[$this->name];
   }
 
-  public function is_active()
+  public function is_active(): bool
   {
     return $this->gateway->is_available();
   }
 
-  public function get_payment_method_script_handles()
+  public function get_payment_method_script_handles(): array
   {
-    $script_path = '/assets/js/frontend/blocks.js';
+    $script_path = "/assets/js/frontend/blocks.js";
     $script_asset_path = WC_Nihaopay_Checkout::plugin_abspath() . "assets/js/frontend/blocks.asset.php";
-    $script_asset = file_exists($script_asset_path) ? require($script_asset_path) : [
-      "dependencies" => [],
-      "version" => "1.0.0"
-    ];
+    $script_asset = file_exists($script_asset_path)
+      ? require $script_asset_path
+      : [
+        "dependencies" => [],
+        "version" => "1.0.0",
+      ];
 
     $script_url = WC_Nihaopay_Checkout::plugin_url() . $script_path;
 
     wp_register_script(
       "wc-nihaopay-checkout-blocks",
       $script_url,
-      $script_asset['dependencies'],
-      $script_asset['version'],
-      true
+      $script_asset["dependencies"],
+      $script_asset["version"],
+      true,
     );
 
     if (function_exists("wp_set_script_translations")) {
-      wp_set_script_translations("wc-nihaopay-checkout-blocks", "woocommerce-nihaopay-checkout", WC_Nihaopay_Checkout::plugin_abspath() . 'languages/');
-
-      return ['wc-nihaopay-checkout-blocks'];
+      wp_set_script_translations(
+        "wc-nihaopay-checkout-blocks",
+        "woocommerce-nihaopay-checkout",
+        WC_Nihaopay_Checkout::plugin_abspath() . "languages/",
+      );
     }
+
+    $style_path = "assets/js/frontend/blocks.css";
+    if (file_exists(WC_Nihaopay_Checkout::plugin_abspath() . $style_path)) {
+      wp_enqueue_style(
+        "wc-nihaopay-checkout-blocks",
+        WC_Nihaopay_Checkout::plugin_url() . "/" . $style_path,
+        [],
+        $script_asset["version"],
+      );
+      wp_style_add_data("wc-nihaopay-checkout-blocks", "rtl", "replace");
+    }
+
+    return ["wc-nihaopay-checkout-blocks"];
   }
 
-  public function get_payment_method_data()
+  public function get_payment_method_data(): array
   {
     return [
-      "title" => $this->get_setting('title'),
+      "title" => $this->get_setting("title"),
       "enable_wechatpay" => $this->get_setting("enable_wechatpay"),
       "enable_alipay" => $this->get_setting("enable_alipay"),
       "enable_unionpay" => $this->get_setting("enable_unionpay"),

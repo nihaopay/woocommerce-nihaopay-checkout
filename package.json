@@ -1,7 +1,7 @@
 {
   "name": "woocommerce-nihaopay-checkout",
   "title": "WooCommerce NihaoPay Checkout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "NihaoPay",
   "license": "GPL-3.0+",
   "keywords": [],
@@ -10,6 +10,7 @@
     "npm": "^10.5.0"
   },
   "devDependencies": {
+    "@prettier/plugin-php": "^0.26.0",
     "@woocommerce/dependency-extraction-webpack-plugin": "2.2.0",
     "@wordpress/scripts": "^30.20.0",
     "cross-env": "7.0.3"

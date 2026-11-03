@@ -1,0 +1,12 @@
+{
+    "$schema": "./phpactor.schema.json",
+    "indexer.stub_paths": [
+        "%project_root%/vendor/php-stubs/wordpress-stubs",
+        "%project_root%/vendor/php-stubs/woocommerce-stubs"
+    ],
+    "indexer.max_filesize_to_index": 10000000,
+    "indexer.exclude_patterns": [
+        "/node_modules/**/*",
+        "/vendor/php-stubs/**/*"
+    ]
+}

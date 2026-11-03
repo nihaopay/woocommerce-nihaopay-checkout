@@ -4,10 +4,10 @@
  * Plugin Name: WooCommerce NihaoPay Checkout
  * Plugin URI: https://nihaopay.com/
  * Description: Adds NihaoPay payment method to your WooCommerce site.
- * Version: 1.0.0
+ * Version: 1.0.1
  *
  * Author: NihaoPay
- * Author URI: https://nihaopay.com/
+ * Author URI: https://www.nihaopay.com/
  *
  * Text Domain: woocommerce-nihaopay-checkout
  *
@@ -21,56 +21,56 @@ if (!defined("ABSPATH")) {
 
 class WC_Nihaopay_Checkout
 {
-  public static function init()
+  public static function init(): void
   {
     add_action("plugins_loaded", [__CLASS__, "includes"], 0);
     add_filter("woocommerce_payment_gateways", [__CLASS__, "add_gateway"]);
     add_action("woocommerce_blocks_loaded", [__CLASS__, "woocommerce_nihaopay_checkout_woocommerce_block_support"]);
 
     // add session data get action
-    add_action(
-      'wp_ajax_get_session_data',
-      function () {
-        global $woocommerce;
-        $key_to_get = isset($_GET['orderId']) ? sanitize_text_field($_GET['orderId']) : '';
-        $data = $woocommerce->session->get($key_to_get);
-        wp_send_json([$key_to_get => $data]);
-        wp_die();
-      }
-    );
-    add_action(
-      'wp_ajax_nopriv_get_session_data',
-      function () {
-        global $woocommerce;
-        $key_to_get = isset($_GET['orderId']) ? sanitize_text_field($_GET['orderId']) : '';
-        $data = $woocommerce->session->get($key_to_get);
-        wp_send_json([$key_to_get => $data]);
-        wp_die();
-      }
-    );
-
-    add_action('init', function () {
-      add_rewrite_rule('^nihaopay-redirect/?$', 'index.php?nihaopay_redirect=1', 'top');
-      add_rewrite_tag('%nihaopay_redirect%', '1');
+    add_action("wp_ajax_get_session_data", function () {
+      global $woocommerce;
+      $key_to_get = isset($_GET["orderId"]) ? sanitize_text_field($_GET["orderId"]) : "";
+      $data = $woocommerce->session->get($key_to_get);
+      wp_send_json([$key_to_get => $data]);
+      wp_die();
+    });
+    add_action("wp_ajax_nopriv_get_session_data", function () {
+      global $woocommerce;
+      $key_to_get = isset($_GET["orderId"]) ? sanitize_text_field($_GET["orderId"]) : "";
+      $data = $woocommerce->session->get($key_to_get);
+      wp_send_json([$key_to_get => $data]);
+      wp_die();
     });
 
-    add_action('template_redirect', [__CLASS__, 'handle_redirect_template']);
+    add_action("init", function () {
+      add_rewrite_rule('^nihaopay-redirect/?$', "index.php?nihaopay_redirect=1", "top");
+      add_rewrite_tag("%nihaopay_redirect%", "1");
+    });
+
+    add_action("template_redirect", [__CLASS__, "handle_redirect_template"]);
   }
 
-  function add_rewrite()
+  function add_rewrite(): void
   {
-    add_rewrite_rule('^nihaopay-redirect/?$', 'index.php?nihaopay_redirect=1', 'top');
-    add_rewrite_tag('%nihaopay_redirect%', '1');
+    add_rewrite_rule('^nihaopay-redirect/?$', "index.php?nihaopay_redirect=1", "top");
+    add_rewrite_tag("%nihaopay_redirect%", "1");
   }
 
-  public static function includes()
+  public static function includes(): void
   {
     if (class_exists("WC_Payment_Gateway")) {
       require_once "includes/class-wc-nihaopay-gateway.php";
     }
   }
 
-  public static function add_gateway($gateways)
+  /**
+   * Register the NihaoPay gateway with WooCommerce.
+   *
+   * @param array $gateways
+   * @return array
+   */
+  public static function add_gateway($gateways): array
   {
     $gateways[] = "WC_Nihaopay_Gateway";
     return $gateways;
@@ -83,7 +83,7 @@ class WC_Nihaopay_Checkout
    */
   public static function plugin_url()
   {
-    return untrailingslashit(plugins_url('/', __FILE__));
+    return untrailingslashit(plugins_url("/", __FILE__));
   }
 
   /**
@@ -96,23 +96,21 @@ class WC_Nihaopay_Checkout
     return trailingslashit(plugin_dir_path(__FILE__));
   }
 
-  public static function woocommerce_nihaopay_checkout_woocommerce_block_support()
+  public static function woocommerce_nihaopay_checkout_woocommerce_block_support(): void
   {
-    if (class_exists('Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType')) {
-      require_once 'includes/class-wc-nihaopay-checkout-blocks.php';
-      add_action(
-        'woocommerce_blocks_payment_method_type_registration',
-        function (Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry) {
-          $payment_method_registry->register(new WC_Nihaopay_Checkout_Blocks_Support());
-        }
-      );
+    if (class_exists("Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType")) {
+      require_once "includes/class-wc-nihaopay-checkout-blocks.php";
+      add_action("woocommerce_blocks_payment_method_type_registration", function (
+        Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry
+      ) {
+        $payment_method_registry->register(new WC_Nihaopay_Checkout_Blocks_Support());
+      });
     }
   }
 
-  public static function handle_redirect_template()
+  public static function handle_redirect_template(): void
   {
-    if (get_query_var('nihaopay_redirect')) {
-?>
+    if (get_query_var("nihaopay_redirect")) { ?>
       <!DOCTYPE html>
       <html>
 
@@ -128,11 +126,6 @@ class WC_Nihaopay_Checkout
             let txt = document.createElement("textarea");
             txt.innerHTML = str;
             return txt.value;
-          }
-
-          function contentDecode(res) {
-            var content = atob(res);
-            return decode(content);
           }
 
           function getUrlParam(key) {
@@ -163,7 +156,7 @@ class WC_Nihaopay_Checkout
 
           function getSessionData(orderId, cb) {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/wp-admin/admin-ajax.php?action=get_session_data&orderId=' + orderId, true);
+            xhr.open('GET', '/wp-admin/admin-ajax.php?action=get_session_data&orderId=' + encodeURIComponent(orderId), true);
             xhr.onreadystatechange = function() {
               if (xhr.readyState === 4 && xhr.status === 200) {
                 var responseData = JSON.parse(xhr.responseText);
@@ -241,9 +234,6 @@ class WC_Nihaopay_Checkout
                   runScripts(document.documentElement);
                 }
               });
-            } else if ('res' in params) {
-              document.documentElement.innerHTML = contentDecode(params['res']);
-              runScripts(document.documentElement);
             } else {
               document.documentElement.innerHTML = '<h1>cant\'t get order info by orderId</h1>';
               runScripts(document.documentElement);
@@ -253,10 +243,8 @@ class WC_Nihaopay_Checkout
         </script>
       </body>
 
-      </html><?php
-              exit;
-            }
-          }
-        }
+      </html><?php exit();}
+  }
+}
 
-        WC_Nihaopay_Checkout::init();
+WC_Nihaopay_Checkout::init();

@@ -6,6 +6,7 @@ import { useState, useEffect } from "@wordpress/element";
 import alipayLogo from "../../images/alipay_logo.png";
 import unionpayLogo from "../../images/unionpay_logo.png";
 import wechatpayLogo from "../../images/wechatpay_logo.png";
+import "./blocks.css";
 
 const settings = getSetting("nihaopay_data", {});
 
@@ -16,6 +17,12 @@ const label = decodeEntities(settings.title) || defaultLabel;
 const isWechatPayEnabled = decodeEntities(settings.enable_wechatpay) === "yes";
 const isAlipayEnabled = decodeEntities(settings.enable_alipay) === "yes";
 const isUnionPayEnabled = decodeEntities(settings.enable_unionpay) === "yes";
+
+const VENDORS = {
+  wechatpay: { name: "WeChat Pay", logo: wechatpayLogo },
+  alipay: { name: "Alipay", logo: alipayLogo },
+  unionpay: { name: "UnionPay", logo: unionpayLogo },
+};
 
 /**
  * Content component
@@ -60,9 +67,9 @@ const Content = ({ eventRegistration, emitResponse }) => {
 
   // set default option
   useEffect(() => {
-    if (isWechatPayEnabled) setSelectedOption("WechatPay");
-    else if (isAlipayEnabled) setSelectedOption("AliPay");
-    else setSelectedOption("UnionPay");
+    if (isWechatPayEnabled) setSelectedOption("wechatpay");
+    else if (isAlipayEnabled) setSelectedOption("alipay");
+    else setSelectedOption("unionpay");
   }, [
     setSelectedOption,
     isWechatPayEnabled,
@@ -70,44 +77,33 @@ const Content = ({ eventRegistration, emitResponse }) => {
     isUnionPayEnabled,
   ]);
 
-  const genVendorRadioButtonGroup = (vendor) => (
-    <>
-      <input
-        name="vendor"
-        type="radio"
-        value={vendor}
-        checked={selectedOption === vendor}
-      />
-      <p>{vendor}</p>
-    </>
-  );
+  const genVendorRadioButtonGroup = (key) => {
+    const { name, logo } = VENDORS[key];
+    const isSelected = selectedOption === key;
+    return (
+      <label className={`np-option${isSelected ? " is-selected" : ""}`}>
+        <span className="np-vendor">
+          <img className="np-logo" src={logo} alt="" />
+          <span className="np-name">{name}</span>
+        </span>
+        <input
+          name="vendor"
+          type="radio"
+          value={key}
+          checked={isSelected}
+          onChange={() => setSelectedOption(key)}
+        />
+      </label>
+    );
+  };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "flex-start",
-      }}
-      onChange={(e) => {
-        setSelectedOption(e.target.value);
-      }}
-    >
-      <fieldset
-        style={{
-          flexGrow: "1",
-        }}
-      >
-        <legend>Select method of payment*</legend>
-        <div style={{ display: "flex", gap: "20px" }}>
-          {isWechatPayEnabled && genVendorRadioButtonGroup("WechatPay")}
-        </div>
-        <div style={{ display: "flex", gap: "20px" }}>
-          {isAlipayEnabled && genVendorRadioButtonGroup("AliPay")}
-        </div>
-        <div style={{ display: "flex", gap: "20px" }}>
-          {isUnionPayEnabled && genVendorRadioButtonGroup("UnionPay")}
-        </div>
+    <div className="nihaopay-fields">
+      <fieldset>
+        <legend>Select payment method</legend>
+        {isUnionPayEnabled && genVendorRadioButtonGroup("unionpay")}
+        {isWechatPayEnabled && genVendorRadioButtonGroup("wechatpay")}
+        {isAlipayEnabled && genVendorRadioButtonGroup("alipay")}
       </fieldset>
     </div>
   );

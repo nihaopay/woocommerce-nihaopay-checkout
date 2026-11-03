@@ -1,0 +1,13 @@
+{
+  "name": "nihaopay/woocommerce-nihaopay-checkout",
+  "description": "WooCommerce NihaoPay Checkout",
+  "type": "wordpress-plugin",
+  "license": "GPL-3.0-or-later",
+  "require-dev": {
+    "php-stubs/wordpress-stubs": "^6.8",
+    "php-stubs/woocommerce-stubs": "^10.0"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

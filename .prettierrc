@@ -1,0 +1,14 @@
+{
+  "plugins": ["@prettier/plugin-php"],
+  "overrides": [
+    {
+      "files": "*.php",
+      "options": {
+        "tabWidth": 2,
+        "printWidth": 120,
+        "braceStyle": "per-cs",
+        "phpVersion": "7.4"
+      }
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+.nihaopay-fields,
+.nihaopay-fields * {
+  all: revert;
+}
+
+.nihaopay-fields {
+  font: inherit;
+  color: inherit;
+}
+
+.nihaopay-fields fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nihaopay-fields legend {
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.nihaopay-fields .np-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+.nihaopay-fields .np-option:hover {
+  border-color: color-mix(in srgb, currentColor 32%, transparent);
+}
+
+.nihaopay-fields .np-option.is-selected {
+  border-color: color-mix(in srgb, currentColor 55%, transparent);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+}
+
+.nihaopay-fields .np-option:has(input:focus-visible) {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.nihaopay-fields .np-vendor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nihaopay-fields .np-logo {
+  display: block;
+  width: 40px;
+  height: 28px;
+  padding: 3px 4px;
+  box-sizing: border-box;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+}
+
+.nihaopay-fields .np-name {
+  margin: 0;
+  font-weight: 500;
+}
+
+.nihaopay-fields input[type="radio"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: currentColor;
+  cursor: pointer;
+}
+
+.nihaopay-fields input[type="radio"]:focus,
+.nihaopay-fields input[type="radio"]:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nihaopay-fields .np-option {
+    transition: none;
+  }
+}
