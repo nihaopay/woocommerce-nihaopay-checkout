@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout codebase
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
 
@@ -60,14 +60,14 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           rm -rf "$TEMP_DIR"
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: woocommerce-nihaopay-checkout-${{ steps.version.outputs.VERSION }}
           path: woocommerce-nihaopay-checkout-${{ steps.version.outputs.VERSION }}.zip
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: woocommerce-nihaopay-checkout-${{ steps.version.outputs.VERSION }}.zip
           draft: false
