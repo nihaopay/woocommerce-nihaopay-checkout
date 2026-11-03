@@ -19,7 +19,7 @@ check_node_version() {
     local version=$(node -v | sed 's/v//')
     local major_version=$(echo $version | cut -d. -f1)
     
-    [ "$major_version" -ge 20 ]
+    [ "$major_version" -ge 24 ]
 }
 
 echo -e "${YELLOW}Checking system requirements...${NC}"
@@ -32,7 +32,7 @@ for cmd in php wp zip; do
 done
 
 if ! check_node_version; then
-    echo -e "${RED}ERROR: Node.js 20+ required.${NC}"
+    echo -e "${RED}ERROR: Node.js 24+ required.${NC}"
     exit 1
 fi
 
@@ -57,9 +57,6 @@ if [ -f "woocommerce-nihaopay-checkout-${VERSION}.zip" ]; then
     fi
     rm "woocommerce-nihaopay-checkout-${VERSION}.zip"
 fi
-
-echo -e "${YELLOW}Checking for package updates...${NC}"
-npm run packages-update
 
 echo -e "${YELLOW}Installing dependencies...${NC}"
 npm install

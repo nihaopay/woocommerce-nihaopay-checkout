@@ -23,8 +23,8 @@ for /f "tokens=1 delims=." %%a in ('node --version') do (
     set "NODE_MAJOR=%%a"
     set "NODE_MAJOR=!NODE_MAJOR:v=!"
 )
-if !NODE_MAJOR! LSS 20 (
-    echo ERROR: Node.js 20+ required.
+if !NODE_MAJOR! LSS 24 (
+    echo ERROR: Node.js 24+ required.
     pause
     exit /b 1
 )
@@ -55,9 +55,6 @@ if exist "woocommerce-nihaopay-checkout-!VERSION!.zip" (
     )
     del "woocommerce-nihaopay-checkout-!VERSION!.zip"
 )
-
-echo Checking for package updates...
-call npm run packages-update
 
 echo Installing dependencies...
 call npm install

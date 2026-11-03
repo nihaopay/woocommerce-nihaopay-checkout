@@ -16,7 +16,6 @@ Download and unzip the latest release from this repository's release tab to your
 
 ```sh
 $ npm install
-$ npm run packages-update
 $ npm run build
 ```
 
